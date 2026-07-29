@@ -2,20 +2,33 @@ import Loading from "@/components/Loading";
 import SearchAppBar from "@/components/layout/SearchAppBar";
 import AppQuantityInput from "@/components/product/AppQuantityInput";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { getSingleProduct } from "@/stores/slices/productSlice";
+import { addCart } from "@/stores/slices/cartSlice";
+import { CartItem } from "@/types/cart";
 import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const index = () => {
     const router = useRouter();
     const productId = Number(router.query.id);
-    const product = useAppSelector((state) => state.product.singleItem);
+    const products = useAppSelector((state) => state.product.items);
     const dispatch = useAppDispatch();
 
+    //cart
+    const [cart, setCart] = useState<CartItem>();
+    const [Qty, setQty] = useState<number>(1);
+
+    const product = products.find((product) => product.id === productId);
+
     useEffect(() => {
-        productId && dispatch(getSingleProduct(productId));
-    }, [productId]);
+        if (!product) return;
+        setCart((prevState) => (prevState ? { ...prevState, Qty } : { product, Qty }));
+    }, [product, Qty]);
+
+    const handleAddToCart = () => {
+        dispatch(addCart(cart));
+        router.push("/product");
+    };
 
     if (!productId) return <Loading />;
 
@@ -37,7 +50,6 @@ const index = () => {
                             }}
                         >
                             <Typography variant="h4">{product.title}</Typography>
-
                             <Typography variant="h6" sx={{ color: "gray" }}>
                                 {product.description}
                             </Typography>
@@ -57,10 +69,12 @@ const index = () => {
                         }}
                     >
                         <Box>
-                            <AppQuantityInput />
+                            <AppQuantityInput Qty={Qty} setQty={setQty} />
                         </Box>
                         <Box>
-                            <Button variant="contained">Add To Cart</Button>
+                            <Button variant="contained" onClick={handleAddToCart}>
+                                Add To Cart
+                            </Button>
                         </Box>
                     </Box>
                 </Box>

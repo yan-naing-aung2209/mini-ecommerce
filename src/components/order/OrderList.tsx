@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/stores/hooks";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -6,17 +7,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-function createData(title: string, price: number, Qty: number, total: number) {
-    return { title, price, Qty, total };
-}
-
-const rows = [
-    createData("Product 1", 110, 6, 660),
-    createData("Product 2", 55, 2, 110),
-    createData("Product 3", 20, 3, 60),
-];
-
 const OrderList = () => {
+    const carts = useAppSelector((state) => state.cart.items);
+
+    const totalPrice = carts.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.product.price * currentValue.Qty,
+        0,
+    );
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="caption table">
@@ -38,12 +36,12 @@ const OrderList = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.title}>
-                            <TableCell>{row.title}</TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="right">{row.Qty}</TableCell>
-                            <TableCell align="right">{row.total}</TableCell>
+                    {carts.map((cart) => (
+                        <TableRow key={cart.product.title}>
+                            <TableCell>{cart.product.title}</TableCell>
+                            <TableCell align="right">{cart.product.price}</TableCell>
+                            <TableCell align="right">{cart.Qty}</TableCell>
+                            <TableCell align="right">{cart.product.price * cart.Qty}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow sx={{ bgcolor: "gray" }}>
@@ -53,7 +51,7 @@ const OrderList = () => {
                             align="right"
                             sx={{ color: "white", fontWeight: "bold", fontSize: 20 }}
                         >
-                            830
+                            {totalPrice}
                         </TableCell>
                     </TableRow>
                 </TableBody>

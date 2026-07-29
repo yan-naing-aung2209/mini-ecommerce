@@ -13,7 +13,7 @@ import SearchField from "./SearchField";
 interface NavProps {
     children: ReactNode;
     isMainPage?: boolean | false;
-    setProducts: Dispatch<SetStateAction<Product[]>>;
+    setProducts?: Dispatch<SetStateAction<Product[]>>;
 }
 
 const SearchAppBar = ({ children, isMainPage, setProducts }: NavProps) => {
@@ -40,10 +40,11 @@ const SearchAppBar = ({ children, isMainPage, setProducts }: NavProps) => {
                     </Link>
                     {isMainPage && (
                         <Box sx={{ position: "absolute", left: "40%", color: "white" }}>
+                            {/* @ts-ignore */}
                             <SearchField products={products} setProducts={setProducts} />
                         </Box>
                     )}
-                    <Box sx={{ display: "flex", position: "absolute", right: 20 }}>
+                    <Box>
                         <AddToCart />
                     </Box>
                 </Toolbar>
