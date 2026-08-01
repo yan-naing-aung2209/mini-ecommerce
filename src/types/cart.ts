@@ -1,7 +1,6 @@
 import { Product } from "../../generated/prisma/client";
 
-export interface CartItem {
-  product: Product;
+export interface CartItem extends Product {
   Qty: number;
 }
 

@@ -16,13 +16,6 @@ export default function AppQuantityInput({ Qty, setQty }: Props) {
     Qty <= 1 ? setDisable(true) : setDisable(false);
   }, [Qty]);
 
-  const handleDecreaseQty = () => {
-    setQty((prevState) => prevState - 1);
-  };
-  const handleIncreaseQty = () => {
-    setQty((prevState) => prevState + 1);
-  };
-
   return (
     <Box sx={{ display: "flex", gap: 1, justifyContent: "center", alignItems: "center" }}>
       <IconButton
@@ -35,7 +28,7 @@ export default function AppQuantityInput({ Qty, setQty }: Props) {
           "&:hover": { border: "2px solid blue", color: "black" },
         }}
         disabled={disable}
-        onClick={handleDecreaseQty}
+        onClick={() => setQty((prevState) => prevState - 1)}
       >
         <RemoveIcon />
       </IconButton>
@@ -52,17 +45,16 @@ export default function AppQuantityInput({ Qty, setQty }: Props) {
       >
         <Typography variant="h6">{Qty}</Typography>
       </Box>
-
       <IconButton
         sx={{
           bgcolor: "blue",
-          border: "1px solid transparent",
+          border: "2px solid transparent",
           width: 25,
           height: 25,
           color: "white",
           "&:hover": { border: "2px solid blue", color: "black" },
         }}
-        onClick={handleIncreaseQty}
+        onClick={() => setQty((prevState) => prevState + 1)}
       >
         <AddIcon />
       </IconButton>

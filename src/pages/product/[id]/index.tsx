@@ -3,6 +3,7 @@ import SearchAppBar from "@/components/layout/SearchAppBar";
 import AppQuantityInput from "@/components/product/AppQuantityInput";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { addCart } from "@/stores/slices/cartSlice";
+import { getProducts } from "@/stores/slices/productSlice";
 import { CartItem } from "@/types/cart";
 import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
@@ -21,12 +22,13 @@ const index = () => {
     const product = products.find((product) => product.id === productId);
 
     useEffect(() => {
+        !products.length && dispatch(getProducts());
         if (!product) return;
-        setCart((prevState) => (prevState ? { ...prevState, Qty } : { product, Qty }));
-    }, [product, Qty]);
+        setCart((prevState) => (prevState ? { ...prevState, Qty } : { ...product, Qty }));
+    }, [products.length, product, Qty]);
 
     const handleAddToCart = () => {
-        dispatch(addCart(cart));
+        !!cart && dispatch(addCart(cart));
         router.push("/product");
     };
 
