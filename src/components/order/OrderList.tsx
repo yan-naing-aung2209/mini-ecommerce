@@ -11,7 +11,7 @@ const OrderList = () => {
     const carts = useAppSelector((state) => state.cart.items);
 
     const totalPrice = carts.reduce(
-        (accumulator, currentValue) => accumulator + currentValue.product.price * currentValue.Qty,
+        (accumulator, currentValue) => accumulator + currentValue.price * currentValue.Qty,
         0,
     );
 
@@ -37,11 +37,11 @@ const OrderList = () => {
                 </TableHead>
                 <TableBody>
                     {carts.map((cart) => (
-                        <TableRow key={cart.product.title}>
-                            <TableCell>{cart.product.title}</TableCell>
-                            <TableCell align="right">{cart.product.price}</TableCell>
+                        <TableRow key={cart.title}>
+                            <TableCell>{cart.title}</TableCell>
+                            <TableCell align="right">{cart.price}</TableCell>
                             <TableCell align="right">{cart.Qty}</TableCell>
-                            <TableCell align="right">{cart.product.price * cart.Qty}</TableCell>
+                            <TableCell align="right">{cart.price * cart.Qty}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow sx={{ bgcolor: "gray" }}>

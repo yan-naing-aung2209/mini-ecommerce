@@ -25,9 +25,11 @@ export default function index() {
         <SearchAppBar>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <OrderList />
-                <Button variant="contained" sx={{ width: "fit-content" }} onClick={handleConfirmOrder}>
-                    Confirm
-                </Button>
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Button variant="contained" sx={{ width: "fit-content" }} onClick={handleConfirmOrder}>
+                        Confirm
+                    </Button>
+                </Box>
             </Box>
         </SearchAppBar>
     );

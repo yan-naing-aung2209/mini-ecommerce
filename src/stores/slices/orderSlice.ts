@@ -1,7 +1,8 @@
 import config from "@/config";
 import { CartItem } from "@/types/cart";
 import { OrderState } from "@/types/order";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Order } from "../../../generated/prisma/client";
 
 const initialState: OrderState = {
   items: [],
@@ -22,7 +23,7 @@ export const createOrder = createAsyncThunk(
 
     const { msg, data } = await response.json();
 
-    thunkAPI.dispatch(setOrder(data));
+    thunkAPI.dispatch(setOrders(data));
   },
 );
 
@@ -30,13 +31,13 @@ export const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    setOrder: (state, action) => {
+    setOrders: (state, action: PayloadAction<Order[]>) => {
       state.items = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setOrder } = orderSlice.actions;
+export const { setOrders } = orderSlice.actions;
 
 export default orderSlice.reducer;

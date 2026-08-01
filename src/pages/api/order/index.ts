@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
     if (!orderList.length) return res.status(400).json({ msg: "Bad Requset" });
 
     const totalPrice = orderList.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.product.price * currentValue.Qty,
+      (accumulator, currentValue) => accumulator + currentValue.price * currentValue.Qty,
       0,
     );
 
@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
 
     const data = orderList.map((singleOrder) => ({
       order_id: orderId,
-      product_id: singleOrder.product.id,
+      product_id: singleOrder.id,
       qty: singleOrder.Qty,
     }));
 
