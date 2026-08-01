@@ -1,29 +1,16 @@
-import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { getProducts } from "@/stores/slices/productSlice";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { Dispatch, ReactNode, SetStateAction, useEffect } from "react";
-import { Product } from "../../../generated/prisma/client";
+import { ReactNode } from "react";
 import AddToCart from "./AddToCart";
-import SearchField from "./SearchField";
 
 interface NavProps {
     children: ReactNode;
-    isMainPage?: boolean | false;
-    setProducts?: Dispatch<SetStateAction<Product[]>>;
 }
 
-const SearchAppBar = ({ children, isMainPage, setProducts }: NavProps) => {
-    const products = useAppSelector((state) => state.product.items);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(getProducts());
-    }, []);
-
+const SearchAppBar = ({ children }: NavProps) => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" sx={{ top: 0, left: 0, right: 0 }}>
@@ -38,12 +25,6 @@ const SearchAppBar = ({ children, isMainPage, setProducts }: NavProps) => {
                             Mini Ecommerce
                         </Typography>
                     </Link>
-                    {isMainPage && (
-                        <Box sx={{ position: "absolute", left: "40%", color: "white" }}>
-                            {/* @ts-ignore */}
-                            <SearchField products={products} setProducts={setProducts} />
-                        </Box>
-                    )}
                     <Box>
                         <AddToCart />
                     </Box>
