@@ -1,40 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# mini-ecommerce
 
-## Getting Started
+mini-ecommerce is a lightweight e-commerce starter built with Next.js, TypeScript, MUI (Material UI), Redux Toolkit, and Prisma (Postgres). It demonstrates a modern full‑stack pattern with server-side API routes, a React-based storefront, and a Postgres-backed data layer via Prisma.
 
-First, run the development server:
+Key features
+- Next.js (app pages & API routes)
+- TypeScript
+- UI: MUI + Emotion
+- State: Redux Toolkit
+- Database: Prisma + PostgreSQL
+- Lightweight order and product APIs
+
+Tech stack
+- Next.js 16
+- React 19
+- TypeScript
+- Prisma + @prisma/client, pg
+- @mui/material, @emotion/react, @emotion/styled
+- Redux Toolkit
+
+Getting started (development)
+1. Install dependencies
+
+```bash
+npm install
+# or yarn
+```
+
+2. Create a .env file at project root and add your Postgres connection string (example):
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/mini_ecommerce
+# Optional: NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+3. Generate Prisma client and run migrations
+
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
+
+4. Start dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Database / Prisma notes
+- Prisma schema: prisma/schema.prisma
+- To introspect an existing database: `npx prisma db pull`
+- To open Prisma Studio: `npx prisma studio`
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Scripts
+- npm run dev — run Next dev server
+- npm run build — build for production
+- npm run start — start production server
+- npm run lint — run ESLint
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Project layout (high level)
+- pages/ — Next.js pages and API routes
+- prisma/ — Prisma schema and configs
+- src/ — application source (components, hooks, store)
+- public/ — static assets
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Contributing
+- Open issues or PRs for improvements. Keep changes focused and document DB changes via Prisma migrations.
 
-## Learn More
+License
+- MIT
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+If you want, next steps can include adding a seed script, CI, or deployment instructions for Vercel or Docker.
