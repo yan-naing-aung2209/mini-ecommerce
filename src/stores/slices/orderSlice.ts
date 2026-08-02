@@ -3,6 +3,7 @@ import { CartItem } from "@/types/cart";
 import { OrderState } from "@/types/order";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Order } from "../../../generated/prisma/client";
+import { setOrderLines } from "./orderLineSlice";
 
 const initialState: OrderState = {
   items: [],
@@ -22,8 +23,28 @@ export const createOrder = createAsyncThunk(
     });
 
     const { msg, data } = await response.json();
+    const [orders, orderLines] = data;
+    thunkAPI.dispatch(addOrder(orders));
+    thunkAPI.dispatch(setOrderLines(orderLines));
+  },
+);
 
-    thunkAPI.dispatch(setOrders(data));
+export const getOrders = createAsyncThunk("order/getOrders", async (_, thunkAPI) => {
+  const response = await fetch(`${config.apiBaseUrl}/order`);
+  const { msg, data } = await response.json();
+  const [orders, orderLines] = data;
+  thunkAPI.dispatch(setOrders(orders));
+  thunkAPI.dispatch(setOrderLines(orderLines));
+});
+
+export const cancelOrder = createAsyncThunk(
+  "order/cancelOrder",
+  async (payload: number, thunkAPI) => {
+    const response = await fetch(`${config.apiBaseUrl}/order/${payload}`, { method: "DELETE" });
+    const { msg, data } = await response.json();
+    const [orders, orderLines] = data;
+    thunkAPI.dispatch(setOrders(orders));
+    thunkAPI.dispatch(setOrderLines(orderLines));
   },
 );
 
@@ -34,10 +55,16 @@ export const orderSlice = createSlice({
     setOrders: (state, action: PayloadAction<Order[]>) => {
       state.items = action.payload;
     },
+    addOrder: (state, action: PayloadAction<Order>) => {
+      state.items = [...state.items, action.payload];
+    },
+    removeOrder: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setOrders } = orderSlice.actions;
+export const { setOrders, addOrder, removeOrder } = orderSlice.actions;
 
 export default orderSlice.reducer;

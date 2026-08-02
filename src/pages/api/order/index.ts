@@ -6,7 +6,7 @@ import { Order, OrderLine, Status } from "../../../../generated/prisma/client";
 
 type ReturnType = {
   msg: string;
-  data?: Order[] | OrderLine[];
+  data?: [Order[] | Order, OrderLine[]];
 };
 
 enum HttpMethod {
@@ -20,13 +20,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
 
   //GET
   if (method === HttpMethod.get) {
-    const orders = await prisma.order.findMany();
-    return res.status(200).json({ msg: "success", data: orders });
+    const orders = await prisma.order.findMany({ where: { isArchived: false } });
+    const orderIds = orders.map((order) => order.id);
+    const orderLines = await prisma.orderLine.findMany({ where: { order_id: { in: orderIds } } });
+    return res.status(200).json({ msg: "success", data: [orders, orderLines] });
   }
   //POST
   if (method === HttpMethod.post) {
     const orderList: CartItem[] = req.body;
-
     if (!orderList.length) return res.status(400).json({ msg: "Bad Requset" });
 
     const totalPrice = orderList.reduce(
@@ -48,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
 
     const orderLines = await prisma.orderLine.createManyAndReturn({ data });
 
-    return res.status(200).json({ msg: "success", data: orderLines });
+    return res.status(200).json({ msg: "success", data: [order, orderLines] });
   }
   res.status(405).json({ msg: "Method Not Allowed" });
 };

@@ -14,7 +14,7 @@ const AddToCart = () => {
             edge="start"
             color="inherit"
             aria-label="shopping cart"
-            sx={{ display: "flex", position: "absolute", right: 20, top: 5 }}
+            sx={{ display: "flex", position: "absolute", right: 80, top: 5 }}
             disabled={!!!cartMount}
         >
             <Link href="/order/confirm-order" style={{ color: "inherit" }}>
@@ -31,7 +31,7 @@ const AddToCart = () => {
                             textAlign: "center",
                             position: "absolute",
                             right: 0,
-                            top: 0,
+                            top: 5,
                         }}
                     >
                         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>

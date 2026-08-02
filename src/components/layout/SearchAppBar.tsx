@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { ReactNode } from "react";
 import AddToCart from "./AddToCart";
+import Profile from "./Profile";
 
 interface NavProps {
     children: ReactNode;
@@ -27,6 +28,9 @@ const SearchAppBar = ({ children }: NavProps) => {
                     </Link>
                     <Box>
                         <AddToCart />
+                    </Box>
+                    <Box>
+                        <Profile />
                     </Box>
                 </Toolbar>
             </AppBar>

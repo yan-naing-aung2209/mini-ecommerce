@@ -25,6 +25,7 @@ model Order {
   id         Int         @id @default(autoincrement())
   total      Int
   status     Status
+  isArchived Boolean     @default(false)
   orderlines OrderLine[]
 }
 
