@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { HttpMethod } from "@/types/backend/httpMethod";
 import { prisma } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Product } from "../../../../generated/prisma/client";
@@ -8,15 +9,8 @@ type ReturnType = {
   data?: Product[];
 };
 
-enum HttpMethod {
-  get = "GET",
-  post = "POST",
-  put = "PUT",
-  delete = "DELETE",
-}
 const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) => {
   const method = req.method;
-
   //GET
   if (method === HttpMethod.get) {
     const products = await prisma.product.findMany();
