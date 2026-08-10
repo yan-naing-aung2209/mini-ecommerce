@@ -12,9 +12,7 @@ interface Props {
 export default function AppQuantityInput({ Qty, setQty }: Props) {
   const [disable, setDisable] = useState<boolean>(false);
 
-  useEffect(() => {
-    Qty <= 1 ? setDisable(true) : setDisable(false);
-  }, [Qty]);
+  useEffect(() => (Qty <= 1 ? setDisable(true) : setDisable(false)), [Qty]);
 
   return (
     <Box sx={{ display: "flex", gap: 1, justifyContent: "center", alignItems: "center" }}>

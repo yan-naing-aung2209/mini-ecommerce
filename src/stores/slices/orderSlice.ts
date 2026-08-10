@@ -1,6 +1,5 @@
 import config from "@/config";
-import { CartItem } from "@/types/cart";
-import { OrderState } from "@/types/order";
+import { CreateOrderPayload, DeleteOrderPayload, OrderState } from "@/types/order";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Order } from "../../../generated/prisma/client";
 import { setOrderLines } from "./orderLineSlice";
@@ -13,19 +12,23 @@ const initialState: OrderState = {
 
 export const createOrder = createAsyncThunk(
   "order/setOrder",
-  async (payload: CartItem[], thunkAPI) => {
-    const response = await fetch(`${config.apiBaseUrl}/order`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+  async (orderPayload: CreateOrderPayload, thunkAPI) => {
+    const { payload, onSuccess, onError } = orderPayload;
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const { msg, data } = await response.json();
-    const [orders, orderLines] = data;
-    thunkAPI.dispatch(addOrder(orders));
-    thunkAPI.dispatch(setOrderLines(orderLines));
+      const { msg, data } = await response.json();
+      const [orders, orderLines] = data;
+      thunkAPI.dispatch(addOrder(orders));
+      thunkAPI.dispatch(setOrderLines(orderLines));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError(err);
+    }
   },
 );
 
@@ -39,12 +42,20 @@ export const getOrders = createAsyncThunk("order/getOrders", async (_, thunkAPI)
 
 export const cancelOrder = createAsyncThunk(
   "order/cancelOrder",
-  async (payload: number, thunkAPI) => {
-    const response = await fetch(`${config.apiBaseUrl}/order/${payload}`, { method: "DELETE" });
-    const { msg, data } = await response.json();
-    const [orders, orderLines] = data;
-    thunkAPI.dispatch(setOrders(orders));
-    thunkAPI.dispatch(setOrderLines(orderLines));
+  async (orderPayload: DeleteOrderPayload, thunkAPI) => {
+    const { orderId, onSuccess, onError } = orderPayload;
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/order/${orderId}`, { method: "DELETE" });
+      const { msg, data } = await response.json();
+      const [orders, orderLines] = data;
+      thunkAPI.dispatch(setOrders(orders));
+      thunkAPI.dispatch(setOrderLines(orderLines));
+      thunkAPI.dispatch(removeOrder(orderId));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError(err);
+    }
   },
 );
 
@@ -58,8 +69,8 @@ export const orderSlice = createSlice({
     addOrder: (state, action: PayloadAction<Order>) => {
       state.items = [...state.items, action.payload];
     },
-    removeOrder: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+    removeOrder: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter((item) => item.id !== Number(action.payload));
     },
   },
 });

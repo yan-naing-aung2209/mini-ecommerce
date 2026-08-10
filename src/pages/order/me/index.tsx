@@ -1,3 +1,4 @@
+import AppSnackBar from "@/components/AppSnackBar";
 import SearchAppBar from "@/components/layout/SearchAppBar";
 import Loading from "@/components/Loading";
 import OrderCard from "@/components/order/OrderCard";
@@ -5,13 +6,16 @@ import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getOrders } from "@/stores/slices/orderSlice";
 import { getProducts } from "@/stores/slices/productSlice";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function index() {
     const orders = useAppSelector((state) => state.order.items);
     const orderLines = useAppSelector((state) => state.orderLine.items);
     const products = useAppSelector((state) => state.product.items);
     const dispatch = useAppDispatch();
+
+    //snack bar
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (!orders.length) dispatch(getOrders());
@@ -35,9 +39,17 @@ export default function index() {
                                 .map((p) => ({ ...p, qty: ol.qty }));
                         });
 
-                        return <OrderCard order={order} products={orderLineProducts} key={order.id} />;
+                        return (
+                            <OrderCard
+                                order={order}
+                                products={orderLineProducts}
+                                key={order.id}
+                                setOpen={setOpen}
+                            />
+                        );
                     })}
             </Box>
+            <AppSnackBar open={open} onClose={() => setOpen(false)} msg="Cancel order successfully!" />
         </SearchAppBar>
     );
 }

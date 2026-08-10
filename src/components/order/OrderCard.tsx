@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/stores/hooks";
-import { cancelOrder, removeOrder } from "@/stores/slices/orderSlice";
+import { cancelOrder } from "@/stores/slices/orderSlice";
 import { Box, Button, Paper, Typography } from "@mui/material";
+import { Dispatch, SetStateAction } from "react";
 import { Order, Product } from "../../../generated/prisma/client";
 
 interface OrderLineProduct extends Product {
@@ -10,14 +11,17 @@ interface OrderLineProduct extends Product {
 interface Props {
     order: Order;
     products: OrderLineProduct[];
+    setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const OrderCard = ({ order, products }: Props) => {
+const OrderCard = ({ order, products, setOpen }: Props) => {
     const dispatch = useAppDispatch();
 
+    const onSuccess = () => {
+        setOpen(true);
+    };
     const handleCancelOrder = () => {
-        dispatch(cancelOrder(order.id));
-        dispatch(removeOrder(order.id));
+        dispatch(cancelOrder({ orderId: String(order.id), onSuccess }));
     };
 
     return (

@@ -4,7 +4,6 @@ import AppQuantityInput from "@/components/product/AppQuantityInput";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { addCart } from "@/stores/slices/cartSlice";
 import { getProducts } from "@/stores/slices/productSlice";
-import { CartItem } from "@/types/cart";
 import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -16,21 +15,20 @@ const index = () => {
     const dispatch = useAppDispatch();
 
     //cart
-    const [cart, setCart] = useState<CartItem>();
     const [Qty, setQty] = useState<number>(1);
-
     const product = products.find((product) => product.id === productId);
 
     useEffect(() => {
         !products.length && dispatch(getProducts());
         if (!product) return;
-        setCart((prevState) => (prevState ? { ...prevState, Qty } : { ...product, Qty }));
-    }, [products.length, product, Qty]);
+    }, [products.length, product]);
 
     const handleAddToCart = () => {
-        !!cart && dispatch(addCart(cart));
+        product && dispatch(addCart({ ...product, Qty }));
         router.push("/product");
     };
+
+    console.log("rendered...");
 
     if (!productId) return <Loading />;
 

@@ -17,6 +17,8 @@ const index = () => {
         products.length > 0 ? setSearchResults(products) : dispatch(getProducts());
     }, [products.length]);
 
+    console.log("rendered...");
+
     if (!products.length) return <Loading />;
 
     return (
@@ -24,7 +26,7 @@ const index = () => {
             <Box>
                 <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 5 }}>
                     <TextField
-                        id="outlined-basic"
+                        id="filter-product"
                         label="Search..."
                         variant="outlined"
                         sx={{ width: 400 }}

@@ -15,11 +15,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
 
   //GET
   if (method === HttpMethod.delete) {
+    //update order isArchived
+    const validId = Number(id);
+    if (!validId) return res.status(400).json({ msg: "Bad Request" });
     const order = await prisma.order.findFirst({ where: { id: Number(id) } });
-    if (!order) return res.status(400).json({ msg: "Bad Request" });
-
+    if (!order) return res.status(404).json({ msg: "Not Found" });
     await prisma.order.update({ data: { isArchived: true }, where: { id: order.id } });
-
+    //get updated orders and orderlines
     const orders = await prisma.order.findMany({ where: { isArchived: false } });
     if (!orders.length) return res.status(404).json({ msg: "Not Found" });
     const orderIds = orders.map((order) => order.id);

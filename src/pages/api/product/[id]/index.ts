@@ -15,6 +15,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ReturnType>) =>
 
   //GET
   if (method === HttpMethod.get) {
+    const validId = Number(id);
+    if (!validId) return res.status(400).json({ msg: "Bad Request" });
     const product = await prisma.product.findFirst({ where: { id: Number(id) } });
     if (!product) return res.status(404).json({ msg: "Not Found" });
     return res.status(200).json({ msg: "success", data: product });

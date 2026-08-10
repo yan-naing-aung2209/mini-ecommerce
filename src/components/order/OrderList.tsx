@@ -18,7 +18,6 @@ const OrderList = () => {
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="caption table">
-                {/* <caption>total</caption> */}
                 <TableHead>
                     <TableRow>
                         <TableCell component="th" sx={{ fontWeight: "bold", fontSize: 20 }}>
